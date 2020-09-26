@@ -15,7 +15,8 @@ CREATE TABLE role (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title varchar(30),
     salary decimal,
-    FOREIGN KEY (id) REFERENCES department (id)
+    department_id INT,
+    FOREIGN KEY (department_id) REFERENCES department (id)
 );
 
 
@@ -25,7 +26,7 @@ CREATE TABLE employee (
     first_name varchar(30),
     last_name varchar(30),
 	manager_id INT,
-    FOREIGN KEY (id) REFERENCES role (id),
+    role_id INT,
+    FOREIGN KEY (role_id) REFERENCES role (id),
     FOREIGN KEY (manager_id) REFERENCES employee (id)
 );
-
