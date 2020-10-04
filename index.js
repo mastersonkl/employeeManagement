@@ -58,6 +58,21 @@ function promptUser() {
     });
 
 }
+//new dept
+function addDepartment(){ 
+  inquirer.prompt({
+      name: "dept",
+      type: "input",
+      message: "What is the name of the new departmnet?",
+  }).then(function(answer){ 
+      const newDept = new Department(answer.dept);
+      connection.query("INSERT INTO departments SET name = ?", [newDept.name], function(err, res){ 
+          if (err) throw err; 
+          console.log (res.affectedRows + " was inserted into departments!\n")
+      })
+     promptUser(); 
+  })
+};
 
 
   //connection.js
