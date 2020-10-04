@@ -77,20 +77,50 @@ function addDepartment(){
   })
 };
 
+//new role
+function addRole(){
+  connection.query("SELECT * FROM departments", function(err,res){ 
+      if (err) throw err;  
+      for (i=0; i<res.length; i++){ 
+          res[i].value = res[i].id; 
+          res[i].name = res[i].name; 
+          delete res[i].name
+          delete res[i].id; 
+      }
+      var deptOptions = res; 
+      rolePrompt(deptOptions); 
+  })
+  
 
-  //connection.js
-//   const util = require("util");
-// const mysql = require("mysql");
-// const connection = mysql.createConnection({
-//   host: "localhost",
-//   // Your username
-//   user: "root",
-//   // Your password
-//   password: "@Gail123",
-//   database: "employee_tracker"
-// });
-// connection.connect();
-// // Setting up connection.query to use promises instead of callbacks
-// // This allows us to use the async/await syntax
-// connection.query = util.promisify(connection.query);
-// module.exports = connection;
+  function rolePrompt(deptOptions){ 
+      inquirer.prompt([{
+          name: "role",
+          type: "input",
+          message: "What's the name of the new role?"
+      },
+      { 
+          name: "salary", 
+          type: "input", 
+          message: "What's the salary for the new position? Please enter only numbers, no $"
+      }, 
+      { 
+          name: "dept_id", 
+          type: "list", 
+          message: "What department is the new role in?",
+          choices: deptOptions
+      }])
+      
+      .then(function(answer){ 
+          const newRole = new Role(answer.role, answer.salary, answer.dept_id);
+          connection.query("INSERT INTO roles SET ?", newRole, function(err, res){ 
+              if (err) throw err; 
+              console.log (res.affectedRows + " was inserted into roles!\n"); 
+              promptUser(); 
+
+          })
+
+      })
+  }
+
+}
+
