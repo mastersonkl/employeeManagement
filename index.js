@@ -1,6 +1,5 @@
 var mysql = require("mysql");
 const inquirer = require("inquirer");
-// const pw = require("./js/pw");
 var Department = require("./js/department")
 var Employee = require("./js/employee")
 var Role = require("./js/role")
@@ -65,10 +64,10 @@ function addDepartment(){
   inquirer.prompt({
       name: "dept",
       type: "input",
-      message: "What is the name of the new departmnet?",
+      message: "What is the name of the new department?",
   }).then(function(answer){ 
       const newDept = new Department(answer.dept);
-      connection.query("INSERT INTO departments SET name = ?", [newDept.name], function(err, res){ 
+      connection.query("INSERT INTO departments SET name_dept = ?", [newDept.name_dept], function(err, res){ 
           if (err) throw err; 
           console.log (res.affectedRows + " was inserted into departments!\n")
       })
@@ -82,8 +81,8 @@ function addRole(){
       if (err) throw err;  
       for (i=0; i<res.length; i++){ 
           res[i].value = res[i].id; 
-          res[i].name = res[i].name; 
-          delete res[i].name
+          res[i].name = res[i].name_dept; 
+          delete res[i].name_dept;
           delete res[i].id; 
       }
       var deptOptions = res; 
@@ -207,7 +206,7 @@ function viewDepartments(){
 //view all roles
 
 function viewRoles(){ 
-  connection.query("SELECT roles.title, roles.salary, departments.dept_name FROM roles INNER JOIN departments ON roles.department_id = departments.id", function(err,res){ 
+  connection.query("SELECT roles.title, roles.salary, departments.name_dept FROM roles INNER JOIN departments ON roles.department_id = departments.id", function(err,res){ 
       if (err) throw err; 
       console.table(res); 
       promptUser(); 
