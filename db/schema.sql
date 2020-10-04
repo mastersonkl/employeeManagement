@@ -5,28 +5,31 @@ CREATE DATABASE employee_tracker;
 
 USE employee_tracker;
 
-CREATE TABLE department ( 
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name varchar(30)
+CREATE TABLE departments ( 
+    id INT AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL,
+    PRIMARY KEY(id)
 
 );
 
-CREATE TABLE role ( 
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title varchar(30),
-    salary decimal,
-    department_id INT,
-    FOREIGN KEY (department_id) REFERENCES department (id)
+CREATE TABLE roles ( 
+    id INT AUTO_INCREMENT,
+    title VARCHAR(30) NOT NULL,
+    salary DECIMAL NOT NULL,
+    department_id INT NOT NULL,
+    PRIMARY KEY (id)
+    FOREIGN KEY (department_id) REFERENCES departments (id)
 );
 
 
 
-CREATE TABLE employee ( 
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name varchar(30),
-    last_name varchar(30),
+CREATE TABLE employees ( 
+    id INT AUTO_INCREMENT,
+    first_name varchar(30) NOT NULL,
+    last_name varchar(30) NOT NULL,
 	manager_id INT,
     role_id INT,
-    FOREIGN KEY (role_id) REFERENCES role (id),
-    FOREIGN KEY (manager_id) REFERENCES employee (id)
+    PRIMARY KEY (id),
+    FOREIGN KEY (role_id) REFERENCES roles (id),
+    FOREIGN KEY (manager_id) REFERENCES employees (id)
 );
