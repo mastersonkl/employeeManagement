@@ -9,9 +9,7 @@ var Role = require("./js/role")
 const connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
-  // Your username
   user: "root",
-  // Your password
   password: "@Gail123",
   database: "employee_tracker"
 });
