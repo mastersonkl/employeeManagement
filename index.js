@@ -1,7 +1,6 @@
-const util = require("util");
+var mysql = require("mysql");
 const inquirer = require("inquirer");
-const pw = require("./pw");
-const mysql = require("mysql");
+// const pw = require("./js/pw");
 var Department = require("./js/department")
 var Employee = require("./js/employee")
 var Role = require("./js/role")
