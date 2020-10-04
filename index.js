@@ -285,3 +285,93 @@ function updateEmployeeRole(){
   }
 
 }
+
+//update employee manager/delete 
+
+function updateEmployeeManager(){ 
+  connection.query("SELECT * FROM employees", function(err,res){ 
+      if (err) throw err;  
+      for (i=0; i<res.length; i++){ 
+          var fullName = res[i].first_name + " " + res[i].last_name; 
+          res[i].name = fullName;  
+          res[i].value = res[i].role_id; 
+          delete res[i].employee_id;  
+          delete res[i].first_name; 
+          delete res[i].last_name; 
+      }
+      allEmployees = res; 
+      updateEmployeeManagerPrompt(allEmployees); 
+  }) 
+
+  function updateEmployeeManagerPrompt(allEmployees){ 
+  
+      inquirer.prompt([{
+          name: "employee",
+          type: "list",
+          message: "Which employee do you want to update?", 
+          choices: allEmployees
+      },
+      {
+          name: "newManager",
+          type: "list",
+          message: "Who's their new manager? If they do not have a manager, select their own name.",
+          choices: allEmployees
+      }
+      ]).then(function(answer){ 
+          connection.query("UPDATE employees SET ? WHERE ?", [{manager_id: answer.newManager}, {id: answer.employee}], function(err, res){ 
+              if (err) throw err; 
+              console.log (res.affectedRows + " was updated in the employees table!\n")
+              promptUser(); 
+          })
+         
+
+      })
+  }
+
+}
+
+function deleteEmployee(){
+
+  connection.query("SELECT * FROM employees", function(err,res){ 
+      if (err) throw err;  
+      for (i=0; i<res.length; i++){ 
+          var fullName = res[i].first_name + " " + res[i].last_name; 
+          res[i].name = fullName;  
+          res[i].value = res[i].role_id; 
+          delete res[i].employee_id;  
+          delete res[i].first_name; 
+          delete res[i].last_name; 
+      }
+      employees = res; 
+      deletePrompt(employees); 
+  })
+  
+
+  function deletePrompt(employees){ 
+  
+      inquirer.prompt([
+      { 
+          name: "employee_gone", 
+          type: "list", 
+          message: "Which of the employees would you like to delete?",
+          choices: employees
+      }])
+      
+      .then(function(answer){ 
+          connection.query("DELETE FROM employees WHERE ?", {id: answer.employee_gone}, function(err, res){ 
+              if (err) {
+                  console.log("Sorry, this employee manages other employees. Let's provide those employees with a new manager now.")
+                  updateEmployeeManager();
+              }
+              else {
+                  console.log (res.affectedRows + " was removed!\n")
+                  promptUser(); 
+
+              }
+          })
+
+      })
+  }
+
+
+}
