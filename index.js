@@ -192,3 +192,39 @@ function addEmployee(){
   }
 
 }
+// view all depts
+
+function viewDepartments(){ 
+  connection.query("SELECT * FROM departments", function(err,res){ 
+      if (err) throw err; 
+      console.table(res); 
+      promptUser(); 
+
+  })
+
+}
+
+//view all roles
+
+function viewRoles(){ 
+  connection.query("SELECT roles.title, roles.salary, departments.dept_name FROM roles INNER JOIN departments ON roles.department_id = departments.id", function(err,res){ 
+      if (err) throw err; 
+      console.table(res); 
+      promptUser(); 
+
+  })
+}
+
+//view all employees
+
+function viewEmployees(){ 
+  connection.query("SELECT employees.first_name, employees.last_name, roles.title FROM employees INNER JOIN roles ON employees.role_id = roles.id", function(err,res){ 
+      if (err) throw err; 
+      console.table(res); 
+      startingPrompt(); 
+
+  })
+
+}
+
+
