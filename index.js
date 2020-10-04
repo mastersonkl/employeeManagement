@@ -16,23 +16,48 @@ const connection = mysql.createConnection({
 });
 
 
-connection.connect(function(err){
-    if (err) throw err;
-    console.log("You are connected");
-    initial();
-    promptUser();
+connection.connect(function (err) {
+  if (err) throw err;
+  console.log("You are connected");
+  promptUser();
 });
 
-function pushDept() {
-    connection.query("SELECT * FROM department", function (err, res) {
-      if (err) reject(err);
-      // for loop to stringify dept names
-      for (var i = 0; i < res.length; i++) {
-        var deptName = res[i].name;
-        departments.push(deptName);
+function promptUser() {
+  inquirer
+    .prompt({
+      name: "startRequest",
+      type: "list",
+      message: "What would you like to do?",
+      choices: ["Add a department", "Add a role", "Add an employee", "View all departments", "View all roles",
+        "View all employees", "Update an employee's role", "Update an employee's manager", "Delete an employee", "Done! Exit now."]
+    })
+
+    .then(function (answer) {
+
+      if (answer.startRequest === "Add a department") {
+        addDepartment();
+      } else if (answer.startRequest === "Add a role") {
+        addRole();
+      } else if (answer.startRequest === "Add an employee") {
+        addEmployee();
+      } else if (answer.startRequest === "View all departments") {
+        viewDepartments();
+      } else if (answer.startRequest === "View all roles") {
+        viewRoles();
+      } else if (answer.startRequest === "View all employees") {
+        viewEmployees();
+      } else if (answer.startRequest === "Update an employee's role") {
+        updateEmployeeRole();
+      } else if (answer.startRequest === "Update an employee's manager") {
+        updateEmployeeManager();
+      } else if (answer.startRequest === "Delete an employee") {
+        deleteEmployee();
+      } else {
+        connection.end();
       }
     });
-  }
+
+}
 
 
   //connection.js
