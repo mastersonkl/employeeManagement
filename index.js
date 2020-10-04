@@ -2,7 +2,10 @@ const util = require("util");
 const inquirer = require("inquirer");
 const pw = require("./pw");
 const mysql = require("mysql");
-const { initial } = require("lodash");
+var Department = require("./js/department")
+var Employee = require("./js/employee")
+var Role = require("./js/role")
+
 
 
 const connection = mysql.createConnection({
