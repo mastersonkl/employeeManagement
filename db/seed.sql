@@ -30,3 +30,4 @@ VALUES
     ('Peyton', 'Allison', 6, 5),
     ('Emily', 'Burke', 7, NULL),
     ('Timmy', 'Chalamet', 8, 7);
+    

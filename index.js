@@ -327,48 +327,37 @@ function updateEmployeeManager(){
 
 }
 
-function deleteEmployee(){
+//delete employee 
 
-  connection.query("SELECT * FROM employees", function(err,res){ 
-      if (err) throw err;  
-      for (i=0; i<res.length; i++){ 
-          var fullName = res[i].first_name + " " + res[i].last_name; 
-          res[i].name = fullName;  
-          res[i].value = res[i].role_id; 
-          delete res[i].employee_id;  
-          delete res[i].first_name; 
-          delete res[i].last_name; 
-      }
-      employees = res; 
-      deletePrompt(employees); 
-  })
-  
-
-  function deletePrompt(employees){ 
-  
-      inquirer.prompt([
-      { 
-          name: "employee_gone", 
-          type: "list", 
-          message: "Which of the employees would you like to delete?",
-          choices: employees
-      }])
-      
-      .then(function(answer){ 
-          connection.query("DELETE FROM employees WHERE ?", {id: answer.employee_gone}, function(err, res){ 
-              if (err) {
-                  console.log("Sorry, this employee manages other employees. Let's provide those employees with a new manager now.")
-                  updateEmployeeManager();
-              }
-              else {
-                  console.log (res.affectedRows + " was removed!\n")
-                  promptUser(); 
-
-              }
-          })
-
+function deleteEmployee() {
+  connection.query("SELECT id, first_name, last_name FROM employees", function (
+    err,
+    result
+  ) {
+    if (err) throw err;
+    inquirer
+      .prompt({
+        name: "employeeName",
+        type: "list",
+        message: "Who is the employee you would like to delete?",
+        choices: result.map(
+          (employeeName) =>
+            `${employeeName.id} ${employeeName.first_name} ${employeeName.last_name}`
+        ),
       })
-  }
-
-
+      .then(({ employeeName }) => {
+        employeeName = employeeName.replace(/\D/g, "");
+        console.log(employeeName);
+        connection.query(
+          "DELETE FROM employees WHERE ?",
+          {
+            id: employeeName,
+          },
+          function (err, result) {
+            if (err) throw err;
+          }
+        );
+        viewEmployees();
+      });
+  });
 }
