@@ -28,7 +28,7 @@ function promptUser() {
       type: "list",
       message: "What would you like to do?",
       choices: ["Add a department", "Add a role", "Add an employee", "View all departments", "View all roles",
-        "View all employees", "Update an employee's role", "Update an employee's manager", "Delete an employee", "Delete a role", "Done! Exit now."]
+        "View all employees", "Update an employee's role", "Update an employee's manager", "Delete an employee", "Delete a role", "Delete a department", "Done! Exit now."]
     })
 
     .then(function (answer) {
@@ -53,6 +53,8 @@ function promptUser() {
         deleteEmployee();
       } else if (answer.startRequest === "Delete a role") {
         deleteRole();
+      } else if (answer.startRequest === "Delete a department") {
+        deleteDepartment();
       } else {
         connection.end();
       }
@@ -381,6 +383,28 @@ function deleteRole() {
           title: roleChosen,
         });
         viewRoles();
+        promptUser();
+      });
+  });
+}
+
+//delete department 
+
+function deleteDepartment() {
+  connection.query("SELECT * FROM departments", function (err, result) {
+    if (err) throw err;
+    inquirer
+      .prompt({
+        name: "departmentChosen",
+        type: "list",
+        message: "Which department would you like to delete?",
+        choices: result.map((department) => department.name_dept),
+      })
+      .then(({ departmentChosen }) => {
+        connection.query("DELETE FROM departments WHERE ?", {
+          name_dept: departmentChosen,
+        });
+        viewDepartments();
         promptUser();
       });
   });
